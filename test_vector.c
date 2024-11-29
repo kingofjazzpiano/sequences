@@ -19,26 +19,39 @@ int main(){
 	// test_insert();
 	// test_remove();
 
+	size_t size = 50;
 	vector_t vector;
 	int error = vector_init(&vector, 0);
-	printf("error=%d\n", error);
-	error = vector_print(&vector);
-	printf("error=%d\n", error);
-
-	printf("vector.data_size=%zu\n", vector.data_size);	
-	printf("vector.buffer_size=%zu\n", vector.buffer_size);
-
-	size_t size = 100;
+	assert(SUCCESS == error);
 	for (size_t i = 0; i < size; i++){
 		error = vector_insert(&vector, 0, i);
+		assert(SUCCESS == error);
+	}
+
+	printf("vector.size=%zu\n", vector.size);	
+	printf("vector.capacity=%zu\n", vector.capacity);
+
+	for (size_t i = 0; i < size; i++){
+		error = vector_remove(&vector, 0);
 		assert(error == SUCCESS);
 		error = vector_print(&vector);
-		assert(error == SUCCESS);		
+		assert(error == SUCCESS);
 
-		printf("vector.data_size=%zu\n", vector.data_size);	
-		printf("vector.buffer_size=%zu\n", vector.buffer_size);
+		printf("vector.size=%zu\n", vector.size);
+		printf("vector.capacity=%zu\n", vector.capacity);
 	}
 	
+	printf("error=%d\n", error);
+
+	printf("vector.size=%zu\n", vector.size);	
+	printf("vector.capacity=%zu\n", vector.capacity);
+
+	error = vector_free(&vector);
+	assert(SUCCESS == error);
+
+	printf("vector.size=%zu\n", vector.size);	
+	printf("vector.capacity=%zu\n", vector.capacity);
+		
 	printf("\nAll tests done!\n");
 }
 
@@ -58,36 +71,36 @@ void test_remove(){
 
 	int error = vector_init(&vector, size);
 	assert(SUCCESS == error);
-	assert(size == vector.data_size);
-	assert(16 == vector.buffer_size);
+	assert(size == vector.size);
+	assert(16 == vector.capacity);
 
 	error = vector_print(&vector);
 	assert(SUCCESS == error);
 		
-	printf("vector.buffer_size=%zu\n", vector.buffer_size);
+	printf("vector.capacity=%zu\n", vector.capacity);
 
 	for(size_t i = 0; i < 4; i++){
 		error = vector_remove(&vector, index);
 		assert(SUCCESS == error);
 		size--;
-		assert(size == vector.data_size);
-		assert(16 == vector.buffer_size);
+		assert(size == vector.size);
+		assert(16 == vector.capacity);
 	
 		error = vector_print(&vector);
 		assert(SUCCESS == error);
 		
-		printf("vector.buffer_size=%zu\n", vector.buffer_size);
+		printf("vector.capacity=%zu\n", vector.capacity);
 	}
 	error = vector_remove(&vector, index);
 	assert(SUCCESS == error);
 	size--;
-	assert(size == vector.data_size); // size == 5
-	assert(10 == vector.buffer_size);
+	assert(size == vector.size); // size == 5
+	assert(10 == vector.capacity);
 	
 	error = vector_print(&vector);
 	assert(SUCCESS == error);
 
-	printf("vector.buffer_size=%zu\n", vector.buffer_size);
+	printf("vector.capacity=%zu\n", vector.capacity);
 
 	error = vector_remove(&vector, 5);
 	assert(INDEX_IS_OUT_OF_RANGE_ERROR == error);
@@ -117,15 +130,15 @@ void test_insert(){
 	// printf("Enter 1 number:\n");
 	// error = vector_init(&vector, size);
 	// assert(SUCCESS == error);
-	// assert(vector.data_size == 1);
-	// assert(vector.buffer_size == 5);
+	// assert(vector.size == 1);
+	// assert(vector.capacity == 5);
 	// vector_print(&vector);
 	// position = 1;
 	// printf("Insert %d to %zu index\n", item, position);
 	// error = vector_insert(&vector, position, item);
 	// assert(SUCCESS == error);
-	// assert(vector.data_size == 2);
-	// assert(vector.buffer_size == 5);
+	// assert(vector.size == 2);
+	// assert(vector.capacity == 5);
 	// vector_print(&vector);
 	// vector_free(&vector);
 // 
@@ -133,15 +146,15 @@ void test_insert(){
 	// printf("Enter 1 number:\n");
 	// error = vector_init(&vector, size);
 	// assert(SUCCESS == error);
-	// assert(vector.data_size == 1);
-	// assert(vector.buffer_size == 5);
+	// assert(vector.size == 1);
+	// assert(vector.capacity == 5);
 	// vector_print(&vector);
 	// position = 0;
 	// printf("Insert %d to %zu index\n", item, position);
 	// error = vector_insert(&vector, position, item);
 	// assert(SUCCESS == error);
-	// assert(vector.data_size == 2);
-	// assert(vector.buffer_size == 5);
+	// assert(vector.size == 2);
+	// assert(vector.capacity == 5);
 	// vector_print(&vector);
 	// vector_free(&vector);
 
@@ -149,32 +162,32 @@ void test_insert(){
 	printf("Enter %zu number:\n", size);
 	error = vector_init(&vector, size);
 	assert(SUCCESS == error);
-	assert(vector.data_size == 5);
-	assert(vector.buffer_size == 10);
+	assert(vector.size == 5);
+	assert(vector.capacity == 10);
 	vector_print(&vector);
 	
 	position = 0;
 	printf("Insert %d to %zu index\n", item, position);
 	error = vector_insert(&vector, position, item);
 	assert(SUCCESS == error);
-	assert(vector.data_size == 6);
-	assert(vector.buffer_size == 10);
+	assert(vector.size == 6);
+	assert(vector.capacity == 10);
 	vector_print(&vector);
 
 	position = 6;
 	printf("Insert %d to %zu index\n", item, position);
 	error = vector_insert(&vector, position, item);
 	assert(SUCCESS == error);
-	assert(vector.data_size == 7);
-	assert(vector.buffer_size == 10);
+	assert(vector.size == 7);
+	assert(vector.capacity == 10);
 	vector_print(&vector);
 
 	position = 6;
 	printf("Insert %d to %zu index\n", item, position);
 	error = vector_insert(&vector, position, item);
 	assert(SUCCESS == error);
-	assert(vector.data_size == 8);
-	assert(vector.buffer_size == 10);
+	assert(vector.size == 8);
+	assert(vector.capacity == 10);
 	vector_print(&vector);
 
 
@@ -182,16 +195,16 @@ void test_insert(){
 	printf("Insert %d to %zu index\n", item, position);
 	error = vector_insert(&vector, position, item);
 	assert(SUCCESS == error);
-	assert(vector.data_size == 9);
-	assert(vector.buffer_size == 10);
+	assert(vector.size == 9);
+	assert(vector.capacity == 10);
 	vector_print(&vector);
 
 	position = 4;
 	printf("Insert %d to %zu index\n", item, position);
 	error = vector_insert(&vector, position, item);
 	assert(SUCCESS == error);
-	assert(vector.data_size == 10);
-	assert(vector.buffer_size == 10);
+	assert(vector.size == 10);
+	assert(vector.capacity == 10);
 	vector_print(&vector);
 
 
@@ -199,8 +212,8 @@ void test_insert(){
 	printf("Insert %d to %zu index\n", item, position);
 	error = vector_insert(&vector, position, item);
 	assert(SUCCESS == error);
-	assert(vector.data_size == 11);
-	assert(vector.buffer_size == 16);
+	assert(vector.size == 11);
+	assert(vector.capacity == 16);
 	vector_print(&vector);	
 	
 	vector_free(&vector);	
@@ -223,16 +236,16 @@ void test_init(){
 	size = 0;
 	error = vector_init(&vector, size);
 	assert(SUCCESS == error);
-	assert(size == vector.data_size);
-	assert(4 == vector.buffer_size);
+	assert(size == vector.size);
+	assert(4 == vector.capacity);
 	vector_free(&vector);
 
 	size = 1;
 	printf("Enter 1 number:\n");
 	error = vector_init(&vector, size);
 	assert(SUCCESS == error);
-	assert(size == vector.data_size);
-	assert(5 == vector.buffer_size);
+	assert(size == vector.size);
+	assert(5 == vector.capacity);
 	vector_print(&vector);
 	vector_free(&vector);
 
@@ -240,8 +253,8 @@ void test_init(){
 	printf("Enter 4 numbers:\n");
 	error = vector_init(&vector, size);
 	assert(SUCCESS == error);
-	assert(size == vector.data_size);
-	assert(9 == vector.buffer_size);
+	assert(size == vector.size);
+	assert(9 == vector.capacity);
 	vector_print(&vector);
 	vector_free(&vector);
 		
@@ -249,10 +262,10 @@ void test_init(){
 }
 
 bool is_equal_vector(vector_t vector1, vector_t vector2){
-	if (vector1.data_size != vector2.data_size){
+	if (vector1.size != vector2.size){
 		return false;
 	}
-	for (size_t i = 0; i < vector1.data_size; i++){
+	for (size_t i = 0; i < vector1.size; i++){
 		if (vector1.data[i] != vector2.data[i]){
 			return false;
 		}
@@ -267,26 +280,26 @@ void test_struct(){
 		perror("Not enough memory");
 		exit(EXIT_FAILURE);
 	}
-	const size_t BUFFER_SIZE = (size_t)100;
-	const size_t DATA_SIZE = (size_t)5;
-	vector -> data = (int *)malloc(sizeof(int) * BUFFER_SIZE);
+	const size_t capacity = (size_t)100;
+	const size_t size = (size_t)5;
+	vector -> data = (int *)malloc(sizeof(int) * capacity);
 	if (NULL == vector -> data){
 		perror("Not enough memory");
 		exit(EXIT_FAILURE);
 	}
-	vector -> buffer_size = BUFFER_SIZE;
-	vector -> data_size = DATA_SIZE;
+	vector -> capacity = capacity;
+	vector -> size = size;
 
-	for (size_t i = 0; i < DATA_SIZE; i++){
+	for (size_t i = 0; i < size; i++){
 		vector -> data[i] = (int)(i * i);
 	}
 
-	for (size_t i = 0; i < DATA_SIZE; i++){
+	for (size_t i = 0; i < size; i++){
 		assert(vector -> data[i] == (int)(i * i));
 	}
 
-	assert(BUFFER_SIZE == vector -> buffer_size);
-	assert(DATA_SIZE == vector -> data_size);
+	assert(capacity == vector -> capacity);
+	assert(size == vector -> size);
 	printf("%s done\n", __FUNCTION__);		
 }
 
