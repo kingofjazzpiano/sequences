@@ -13,7 +13,7 @@ void test_hash_map_has();
 int main(){
 	test_hash_map_init();
 	test_hash_map_resize();
-	// test_hash_map_set();
+	test_hash_map_set();
 	// test_hash_map_has();
 
 	printf("\n%s done\n", __FILE__);
@@ -51,6 +51,7 @@ void test_hash_map_resize(){
 
 	error = hash_map_init(&map);
 	assert(SUCCESS == error);
+	assert(0 == map.size);
 
 	int keys[3] = {101, 0, 17};
 	for (int i = 0; i < 3; i++){
@@ -59,6 +60,8 @@ void test_hash_map_resize(){
 		map.nodes[hash_code].key = keys[i];
 		map.nodes[hash_code].value = keys[i] * keys[i];
 	}
+	map.size = 3;
+
 
 	printf("Before: ");
 	error = hash_map_print(&map);
@@ -67,6 +70,7 @@ void test_hash_map_resize(){
 	int new_capacity_bit_size = map.capacity_bit_size + 1;
 	error = hash_map_resize(&map, new_capacity_bit_size);
 	assert(SUCCESS == error);
+	assert(3 == map.size);
 	
 	printf("After: ");
 	error = hash_map_print(&map);
@@ -78,6 +82,7 @@ void test_hash_map_resize(){
 	new_capacity_bit_size = map.capacity_bit_size - 1;
 	error = hash_map_resize(&map, new_capacity_bit_size);
 	assert(SUCCESS == error);
+	assert(3 == map.size);
 
 	printf("After: ");
 	error = hash_map_print(&map);
@@ -96,7 +101,15 @@ void test_hash_map_resize(){
 void test_hash_map_set(){
 	printf("\nRun %s\n", __FUNCTION__);
 
-	int keys[3] = {101, 0, 17};
+	const int KEYS_SIZE = 25;
+	int keys[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+				  31, 37, 41, 43, 47, 53, 59, 61, 67,
+				  71, 73, 79, 83, 89};
+	printf("keys: ");
+	for (int i = 0; i < KEYS_SIZE; i++){
+		printf("%d ", keys[i]);
+	}
+	printf("\n");
 	HashMap map;
 	int error = hash_map_set(NULL, keys[2], keys[2] * keys[2]);
 	assert(NULL_POINTER_ERROR == error);
@@ -109,12 +122,19 @@ void test_hash_map_set(){
 	error = hash_map_init(&map);
 	assert(SUCCESS == error);
 
-	for (size_t i = 0; i < 3; i++){
+	for (int i = 0; i < KEYS_SIZE; i++){
 		error = hash_map_set(&map, keys[i], keys[i] * keys[i]);
 		assert(SUCCESS == error);
+		
+		printf("map.size=%u\tmap.capacity=%u\tmap.capacity_bit_size=%d\n",
+			   map.size, map.capacity, map.capacity_bit_size);
+		error = hash_map_print(&map);
+		assert(SUCCESS == error);
+		printf("\n");
 	}
-	assert(3 == map.size);
+	assert(KEYS_SIZE == (int)map.size);
 
+	printf("Newly hash map: ");
 	error = hash_map_print(&map);
 	assert(SUCCESS == error);
 	

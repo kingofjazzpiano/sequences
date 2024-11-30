@@ -64,10 +64,9 @@ int hash_map_init(HashMap *map){
 	if (NULL == map){
 		return NULL_POINTER_ERROR;
 	}
-	map -> size = 0;
-	map -> capacity_bit_size = MIN_CAPACITY_BIT_SIZE;
 	map -> capacity = (uint32_t)(1 << MIN_CAPACITY_BIT_SIZE);
-	map -> nodes = (HashMapNode *)malloc(sizeof(HashMapNode) * map -> capacity);
+	map -> nodes = (HashMapNode *)malloc(sizeof(HashMapNode)
+	 									 * map -> capacity);
 	if (NULL == map -> nodes){
 		return NOT_ENOUGH_MEMORY_ERROR;
 	}
@@ -75,6 +74,8 @@ int hash_map_init(HashMap *map){
 	if (NULL == map -> is_busy){
 		return NOT_ENOUGH_MEMORY_ERROR;
 	}
+	map -> capacity_bit_size = MIN_CAPACITY_BIT_SIZE;
+	map -> size = 0;
 	return SUCCESS;
 }
 
@@ -107,14 +108,13 @@ int hash_map_set(HashMap *map, int key, int value){
 	if (NULL == map or NULL == map -> nodes or NULL == map -> is_busy){
 		return NULL_POINTER_ERROR;
 	}
-	bool has_key = false;
 	uint32_t i = hash(key, map -> capacity_bit_size);
 	assert(i < map -> capacity);
 	while (map -> is_busy[i]){
 		// TODO: Как отследить зацикливание, если все узлы заняты?
-		if ((map -> nodes[i]).key == key){
-			has_key = true;
-			break;
+		if (map -> nodes[i].key == key){
+			map -> nodes[i].value = value;
+			return SUCCESS;
 		}
 		i++;
 		if (i == map -> capacity){
@@ -122,14 +122,42 @@ int hash_map_set(HashMap *map, int key, int value){
 		}
 	}
 	
-	if (has_key){
+	// Here the key does not exist in map, so it need to be added
+	uint32_t new_size = map -> size + 1;
+	bool is_resized = false;
+	int error;
+	// If the data size is greater than 3/4 of capacity
+	// then double the capacity.
+	if (new_size >= (map -> capacity >> 1) + (map -> capacity >> 2)){
+		error = hash_map_resize(map, map -> capacity_bit_size + 1);
+		if (error){
+			return error;
+		}
+		assert(SUCCESS == error);
+		is_resized = true;
+	}
+	map -> size = new_size;
+	if (not is_resized){
 		map -> is_busy[i] = true;
 		map -> nodes[i].key = key;
-		(map -> nodes)[i].value = value;
+		map -> nodes[i].value = value;
+		return SUCCESS;
 	}
-	else {
+
+	// Re-hash key for new map
+	i = hash(key, map -> capacity_bit_size);
+	assert(i < map -> capacity);
+	// Find empty node for new key
+	while (map -> is_busy[i]){
+		i++;
+		if (i == map -> capacity){
+			i = 0;
+		}
+	}
+	map -> is_busy[i] = true;
+	map -> nodes[i].key = key;
+	map -> nodes[i].value = value;
 		
-	}
 	return SUCCESS;
 }
 
@@ -153,7 +181,7 @@ int hash_map_free(HashMap *map){
 
 
 int hash_map_print(const HashMap *map){
-	/* Print Hash Map <key: value> pairs */
+	/* Print Hash Map (key: value) pairs */
 	if (NULL == map or NULL == map -> nodes or NULL == map -> is_busy){
 		return NULL_POINTER_ERROR;
 	}
