@@ -1,5 +1,5 @@
-#ifndef HASH_TABLE_H
-#define HASH_TABLE_H
+#ifndef HASH_MAP_H
+#define HASH_MAP_H
 
 
 #include <assert.h>
@@ -7,12 +7,12 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <iso646.h>
+#include <stdio.h>
 
 #define SUCCESS 0
 #define NULL_POINTER_ERROR 1
 #define NOT_ENOUGH_MEMORY_ERROR 2
 #define KEY_DOES_NOT_EXIST_ERROR 3
-//#define INDEX_IS_OUT_OF_RANGE_ERROR 3 // TODO: delete line
 
 // Amount of bits of minimal hash map size
 #define MIN_CAPACITY_BIT_SIZE 4
@@ -39,6 +39,7 @@ int hash_map_has(HashMap *map, int key, bool *has_key);
 int hash_map_set(HashMap *map, int key, int value);
 int hash_map_get(const HashMap *map, int key, int *value);
 int hash_map_free(HashMap *map);
+int hash_map_print(const HashMap *map);
 
 
-#endif
+#endif  // HASH_MAP_H
