@@ -187,8 +187,8 @@ int hash_map_print(const HashMap *map){
 	}
 	for (unsigned i = 0; i < map -> capacity; i++){
 		if (map -> is_busy[i]){
-			printf("(%d: %d) ", (map -> nodes)[i].key,
-							   (map -> nodes)[i].value);
+			printf("(%d: %d) ", map -> nodes[i].key,
+							   map -> nodes[i].value);
 		}
 	}
 	printf("\n");
