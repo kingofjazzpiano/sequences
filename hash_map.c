@@ -89,7 +89,7 @@ int hash_map_has(HashMap *map, int key, bool *has_key){
 	assert(i < map -> capacity);
 	while (map -> is_busy[i]){
 		// TODO: Как отследить зацикливание, если все узлы заняты?
-		if ((map -> nodes[i]).key == key){
+		if (map -> nodes[i].key == key){
 			*has_key = true;
 			return SUCCESS;
 		}
@@ -162,9 +162,26 @@ int hash_map_set(HashMap *map, int key, int value){
 }
 
 
-int hash_map_get(const HashMap *map, int key, int *value){
-	/* Get value by given key */
-	return SUCCESS;
+int hash_map_get_value_pointer(const HashMap *map, int key, int **value){
+	/* Get value pointer by given key */
+	if (NULL == map or NULL == map -> nodes or NULL == map -> is_busy
+			or NULL == value){
+		return NULL_POINTER_ERROR;
+	}
+	uint32_t i = hash(key, map -> capacity_bit_size);
+	assert(i < map -> capacity);
+	while (map -> is_busy[i]){
+		// TODO: Как отследить зацикливание, если все узлы заняты?
+		if (map -> nodes[i].key == key){
+			*value = &(map -> nodes[i].value);
+			return SUCCESS;
+		}
+		i++;
+		if (i == map -> capacity){
+			i = 0;
+		}
+	}
+	return KEY_DOES_NOT_EXIST_ERROR;
 }
 
 
