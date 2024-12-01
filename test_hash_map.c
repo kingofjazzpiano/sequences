@@ -102,13 +102,13 @@ void test_hash_map_set(){
 	printf("\nRun %s\n", __FUNCTION__);
 
 
-	const int KEYS_SIZE = 10;
-	int keys[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
-				  // 31, 37, 41, 43, 47, 53, 59, 61, 67};
-	// const int KEYS_SIZE = 25;
+	// const int KEYS_SIZE = 20;
 	// int keys[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
-				  // 31, 37, 41, 43, 47, 53, 59, 61, 67,
-				  // 71, 73, 79, 83, 89};
+				  // 31, 37, 41, 43, 47, 53, 59, 61, 67};
+	const int KEYS_SIZE = 25;
+	int keys[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+				  31, 37, 41, 43, 47, 53, 59, 61, 67,
+				  71, 73, 79, 83, 89, 97};
 	printf("keys: ");
 	for (int i = 0; i < KEYS_SIZE; i++){
 		printf("%d ", keys[i]);
