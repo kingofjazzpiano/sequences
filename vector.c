@@ -82,7 +82,6 @@ int vector_init(vector_t *vector, size_t size){
 			return error;
 		}
 	}
-	printf("vector -> size=%zu\n", vector -> size);	
 	return SUCCESS;
 }
 
