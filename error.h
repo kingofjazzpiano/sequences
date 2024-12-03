@@ -19,6 +19,10 @@
 #define KEY_DOES_NOT_EXIST_ERROR 200
 
 
+// Other errors [>1000]
+#define WRONG_LIMITS_ERROR 1000
+
+
 void print_error(int error);
 
 

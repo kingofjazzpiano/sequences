@@ -9,10 +9,8 @@
 #include <iso646.h>
 #include <stdio.h>
 
-#define SUCCESS 0
-#define NULL_POINTER_ERROR 1
-#define NOT_ENOUGH_MEMORY_ERROR 2
-#define KEY_DOES_NOT_EXIST_ERROR 3
+#include "error.h"
+
 
 // Amount of bits of minimal hash map size
 #define MIN_CAPACITY_BIT_SIZE 4

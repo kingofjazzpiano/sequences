@@ -4,7 +4,9 @@
 void print_error(int error){
 	/* Prints an error message based on errors defined in error.h */
 	
-	// General errors
+	/*
+	 * General errors
+	 */
 	if (SUCCESS == error){
 		// No error
 	}
@@ -15,17 +17,30 @@ void print_error(int error){
 		printf("%s\n", "NOT ENOUGH MEMORY ERROR");
 	}
 
-	// Vector specific errors
+	/*
+	 * Vector specific errors
+	 */
 	else if (INDEX_IS_OUT_OF_RANGE_ERROR == error){
 		printf("%s\n", "INDEX IS OUT OF RANGE ERROR");
 	}
 
-	// HashMap specific errors
+	/*
+	 * HashMap specific errors
+	 */
 	else if (KEY_DOES_NOT_EXIST_ERROR == error){
-		printf("%s\n", "KEY_DOES_NOT_EXIST_ERROR");
+		printf("%s\n", "KEY DOES NOT EXIST ERROR");
 	}
 
-	// None of the above
+	/*
+	 * Other error
+	 */
+	else if (WRONG_LIMITS_ERROR == error){
+		printf("%s\n", "WRONG LIMITS ERROR");
+	}
+
+	/*
+	 * None of the above
+	 */
 	else {
 		printf("%s\n", "UNKNOWN ERROR");
 	}

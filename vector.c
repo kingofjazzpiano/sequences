@@ -5,31 +5,59 @@ static size_t get_new_capacity(size_t capacity){
 	return capacity + (capacity >> 2) + 4;
 }
 
-
-int read_int(int *value){
+int read_int(int *value, const int lower_limit, const int upper_limit){
+	/**
+	 * Reads an integer value from stdin and validates it against specified limits.
+	 *
+	 * @param value : Pointer to the location where the read integer value will be stored.
+	 * @param lower_limit : The inclusive lower bound for the valid input range.
+	 * @param upper_limit : The inclusive upper bound for the valid input range.
+	 *
+	 * @return
+	 *         SUCCESS (0) if the input is successfully read and within the specified range.
+	 *         EOF if end-of-file (Ctrl+D) is encountered.
+	 *         An error code defined in vector.h if an error occurs.
+	 *
+	 * @note
+	 *       The `lower_limit` must be less than or equal to `upper_limit`.
+	 *       If this condition is violated, the function will return WRONG_LIMITS_ERROR.
+	 */
 	if (NULL == value){
 		return NULL_POINTER_ERROR;
 	}
+	if (lower_limit > upper_limit){
+		return WRONG_LIMITS_ERROR;
+	}
 	while (true){
-        int scanf_returns = scanf("%d", value);
-        if (scanf_returns == EOF){
-            fprintf(stderr, "\nInterrupted by user\n");
-            return EOF;
-        }
-        while (getchar() != '\n'); // Clear buffer
-        if (scanf_returns == 0){
-             fprintf(stderr, "Only numbers are allowed!\n");
-        }
-        else if (scanf_returns == 1){
-            return SUCCESS;  // Valid input here
-        }
+		int scanf_returns = scanf("%d", value);
+		if (scanf_returns == EOF){
+		    printf("\nInterrupted by user\n");
+		    return EOF;
+		}
+		while (getchar() != '\n'); // Clear buffer
+		if (scanf_returns == 0){
+		     printf("Only numbers are allowed!\n");
+		}
+		if (scanf_returns == 1
+		                and (*value < lower_limit or *value > upper_limit)){
+		    printf("Value is out of range!\n");
+		    printf("Enter value in range [%d, %d]\n", lower_limit, upper_limit);
+		}
+		else if (scanf_returns == 1){
+		    return SUCCESS;  // Valid input here
+		}
+		printf("Try again: ");
 	}
 }
 
 
-int vector_print(vector_t *vector){
+int vector_print(Vector *vector){
 	if (NULL == vector or NULL == vector -> data){
 		return NULL_POINTER_ERROR;
+	}
+	if (0 == vector -> size){
+		printf("Empty Sequence\n");
+		return SUCCESS;
 	}
 	for (size_t i = 0; i < vector -> size; i++){
 		printf("%d ", vector -> data[i]);
@@ -39,15 +67,15 @@ int vector_print(vector_t *vector){
 }
 
 
-int vector_init(vector_t *vector, size_t size){
+int vector_init(Vector *vector, size_t size){
 	/**
-	 * Initializes a vector_t structure with a specified data size and reads values into it.
+	 * Initializes a Vector structure with a specified data size and reads values into it.
 	 *
-	 * This function allocates memory for a `vector_t` structure,
+	 * This function allocates memory for a `Vector` structure,
 	 * including memory for its `data` field, using amortized allocation.
 	 * It uses `read_int()` to read values from stdin and populate the vector.
 	 *
-	 * @param vector : Pointer to a `vector_t` structure defined in vector.h.
+	 * @param vector : Pointer to a `Vector` structure defined in vector.h.
 	 *                 The function allocates memory for the structure and initializes it.
 	 * @param size : The number of elements to be read from stdin and stored in the vector.
 	 *
@@ -74,7 +102,7 @@ int vector_init(vector_t *vector, size_t size){
 	vector -> size = size;
 
 	for (size_t i = 0; i < size; i++){
-		int error = read_int(vector -> data + i);
+		int error = read_int(vector -> data + i, INT_MIN, INT_MAX);
 		int free_error;
 		if (SUCCESS != error){
 			free_error = vector_free(vector);
@@ -86,7 +114,7 @@ int vector_init(vector_t *vector, size_t size){
 }
 
 
-int vector_insert(vector_t *vector, size_t position, int item){
+int vector_insert(Vector *vector, size_t position, int item){
 	if (NULL == vector or NULL == vector -> data){
 		return NULL_POINTER_ERROR;
 	}
@@ -98,7 +126,8 @@ int vector_insert(vector_t *vector, size_t position, int item){
 	size_t new_capacity;
 	if (vector -> capacity == vector -> size){
 		new_capacity = get_new_capacity(vector -> capacity);
-		new_data_place = (int *)realloc(vector -> data, sizeof(int) * new_capacity);
+		new_data_place = (int *)realloc(vector -> data, sizeof(int) 
+										* new_capacity);
 		if (NULL == new_data_place){
 			return NOT_ENOUGH_MEMORY_ERROR;
 		}
@@ -117,7 +146,7 @@ int vector_insert(vector_t *vector, size_t position, int item){
 }
 
 
-int vector_remove(vector_t *vector, size_t index){
+int vector_remove(Vector *vector, size_t index){
 	if (NULL == vector or NULL == vector -> data){
 		return NULL_POINTER_ERROR;
 	}
@@ -144,7 +173,7 @@ int vector_remove(vector_t *vector, size_t index){
 }
 
 
-int vector_free(vector_t *vector){
+int vector_free(Vector *vector){
 	if (vector == NULL){
 		return NULL_POINTER_ERROR;
 	}
