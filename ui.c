@@ -12,7 +12,7 @@
 #define EXTRACT_UNIQUE_ELEMENTS 4
 #define EXIT 5
 
-#define SEQUENCES_MAX_AMOUNT 3
+#define SEQUENCES_MAX_AMOUNT 100
 
 
 typedef struct {
