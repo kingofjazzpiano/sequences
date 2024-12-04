@@ -192,7 +192,9 @@ int hash_map_free(HashMap *map){
 	map -> size = 0;
 	map -> capacity_bit_size = 0;
 	free(map -> nodes);
+	map -> nodes = NULL;
 	free(map -> is_busy);
+	map -> is_busy = NULL;
 	return SUCCESS;
 }
 

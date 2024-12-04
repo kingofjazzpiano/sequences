@@ -41,7 +41,7 @@ int read_int(int *value, const int lower_limit, const int upper_limit){
 		if (scanf_returns == 1
 		                and (*value < lower_limit or *value > upper_limit)){
 		    printf("Value is out of range!\n");
-		    printf("Enter value in range [%d, %d]\n", lower_limit, upper_limit);
+		    printf("Enter value in range [%d - %d]\n", lower_limit, upper_limit);
 		}
 		else if (scanf_returns == 1){
 		    return SUCCESS;  // Valid input here
@@ -180,6 +180,7 @@ int vector_free(Vector *vector){
 	vector -> size = 0;
 	vector -> capacity = 0;
 	free(vector -> data);
+	vector -> data = NULL;
 	return SUCCESS;
 }
 
