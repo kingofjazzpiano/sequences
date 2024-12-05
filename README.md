@@ -1,4 +1,3 @@
-```markdown
 # SEQUENCES
 
 **Unleashing the Raw Chaos of Computational Order!**
