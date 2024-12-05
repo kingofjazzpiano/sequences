@@ -1,3 +1,22 @@
+
+## QUICK START
+
+1. Clone this beast of a repository:
+   ```bash
+   git clone https://github.com/kingofjazzpiano/sequences.git
+   cd sequences
+   ```
+2. Compile it if you dare:
+   ```bash
+   make
+   ```
+3. Launch the inferno:
+   ```bash
+   ./sequences
+   ```
+
+---
+
 # SEQUENCES
 
 **Unleashing the Raw Chaos of Computational Order!**
@@ -25,24 +44,6 @@
 - **C Compiler**: GCC recommended (clang optional if you're a daredevil).
 - **Memory**: Enough RAM to simulate a small server farm.
 - **Patience**: Infinite. This isn't for the casual coder.
-
----
-
-## QUICK START
-
-1. Clone this beast of a repository:
-   ```bash
-   git clone https://github.com/kingofjazzpiano/sequences.git
-   cd sequences
-   ```
-2. Compile it if you dare:
-   ```bash
-   make
-   ```
-3. Launch the inferno:
-   ```bash
-   ./sequences
-   ```
 
 ---
 
